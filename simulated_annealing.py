@@ -32,7 +32,6 @@ def simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min):
     best = filtered[:max(1, len(filtered) // 3)]
     best_eval = objective_function(best, max_duration, target_mood)
     current, current_eval = best[:], best_eval
-    iters = 0
 
     while T > T_min:
         candidate = get_neighbor(current, filtered)
@@ -45,38 +44,40 @@ def simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min):
                 best, best_eval = current[:], current_eval
 
         T *= alpha
-        iters += 1
 
-    return best, best_eval, iters
+    return best, best_eval
    
 # ===== MAIN =====
-target_mood = 'relaksasi'
-max_duration = 60
-n = 100
+target_mood = 'fokus'
+max_duration = 30
+n = 80
 songs = load_songs_from_csv('dataset_top300.csv', n)
 
 T = 1000
-alpha = 0.995
-T_min = 0.01
+alpha = 0.999
+T_min = 0.0001
 
-start = time.perf_counter()
-sa_playlist, sa_score, sa_iters = simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min)
-end = time.perf_counter()
+times = []
+for i in range(1):
+    start = time.perf_counter()
+    sa_playlist, sa_score = simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min)
+    end = time.perf_counter()
+    times.append(end - start)
+avg_time = sum(times) / len(times)
 
 print("=============================== SIMULATED ANNEALING RESULT ================================")
-print(f"Jumlah Dataset   : {n}")
-print(f"Target Mood      : {target_mood}")
-print(f"Batas Durasi     : {max_duration} menit")
+print(f"Jumlah Dataset    : {n}")
+print(f"Target Mood       : {target_mood}")
+print(f"Batas Durasi      : {max_duration} menit")
 print("===========================================================================================")
-print(f"Suhu Awal (T0)   : {T}")
-print(f"Cooling Rate     : {alpha}")
-print(f"Suhu Minimum     : {T_min}")
+print(f"Suhu Awal (T0)    : {T}")
+print(f"Cooling Rate      : {alpha}")
+print(f"Suhu Minimum      : {T_min}")
 print("===========================================================================================")
-print(f"Skor Popularity  : {sa_score}")
-print(f"Iterasi          : {sa_iters}")
-print(f"Time Execution   : {end - start}")
+print(f"Skor Popularity   : {sa_score}")
+print(f"Average Execution : {avg_time:.5}")
 print("===========================================================================================")
-print("Playlist Terbaik :")
+print("Playlist Terbaik  :")
 print("===========================================================================================")
 
 total_duration = 0
@@ -87,6 +88,6 @@ for i, s in enumerate(sa_playlist, start=1):
     print(f"{i:>2}. {artist:<22} | {name:<32} | {s['duration']:>4} mnt | {s['bpm']:>6.1f} BPM | {s['score']:>3}")
 
 print("===========================================================================================")
-print(f"Total Lagu       : {len(sa_playlist)}")
-print(f"Total Durasi     : {round(total_duration, 2)} menit")
+print(f"Total Lagu        : {len(sa_playlist)}")
+print(f"Total Durasi      : {round(total_duration, 2)} menit")
 print("===========================================================================================")
