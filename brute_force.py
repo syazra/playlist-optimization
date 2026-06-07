@@ -22,7 +22,7 @@ def brute_force_playlist(songs, max_duration, target_mood):
     return best['playlist'], best['score']
 
 # ===== MAIN =====
-target_mood = 'fokus'
+target_mood = 'relaksasi'
 max_duration = 30
 n = 50
 songs = load_songs_from_csv('dataset_top300.csv', n)

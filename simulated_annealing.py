@@ -48,17 +48,17 @@ def simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min):
     return best, best_eval
    
 # ===== MAIN =====
-target_mood = 'fokus'
+target_mood = 'relaksasi'
 max_duration = 30
-n = 80
+n = 50
 songs = load_songs_from_csv('dataset_top300.csv', n)
 
 T = 1000
-alpha = 0.999
+alpha = 0.99
 T_min = 0.0001
 
 times = []
-for i in range(1):
+for i in range(10):
     start = time.perf_counter()
     sa_playlist, sa_score = simulated_annealing(songs, max_duration, target_mood, T, alpha, T_min)
     end = time.perf_counter()
